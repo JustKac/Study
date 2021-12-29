@@ -5,11 +5,11 @@ import boardgame.Position;
 public class ChessPosition {
 
 	private int row;
-	private int column;
+	private char column;
 
-	public ChessPosition(int row, int column) {
+	public ChessPosition(int row, char column) {
 		if (column < 'a' || column > 'h' || row < 1 || row > 8) {
-			throw new ChessException("Error instatianting CessPosition. Valid vallues are from a1 to h8");
+			throw new ChessException("Error instatianting ChessPosition. Valid vallues are from a1 to h8");
 		}
 		this.row = row;
 		this.column = column;
@@ -22,19 +22,20 @@ public class ChessPosition {
 	public int getColumn() {
 		return column;
 	}
-	
+
 	protected Position toPosition() {
-		return new Position(8 -row, column - 'a');
+		return new Position(8 - row, column - 'a');
 	}
 
 	protected static ChessPosition fromPosition(Position position) {
-		return new ChessPosition((char)('a' - position.getColumn()), 8 - position.getRow());
+		System.out.println((char) ('a' + position.getColumn()));
+		System.out.println(8 - position.getRow());
+		return new ChessPosition(8 - position.getRow(), (char) ('a' + position.getColumn()));
 	}
 
 	@Override
 	public String toString() {
 		return "" + column + row;
 	}
-	
-	
+
 }
