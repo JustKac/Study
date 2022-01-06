@@ -28,8 +28,6 @@ public class ChessPosition {
 	}
 
 	protected static ChessPosition fromPosition(Position position) {
-		System.out.println((char) ('a' + position.getColumn()));
-		System.out.println(8 - position.getRow());
 		return new ChessPosition(8 - position.getRow(), (char) ('a' + position.getColumn()));
 	}
 
