@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import db.DB;
 import db.DbException;
@@ -143,7 +144,7 @@ public class SellerDaoJDBC implements SellerDao {
 		obj.setName(rs.getString("Name"));
 		obj.setEmail(rs.getString("Email"));
 		obj.setBaseSalary(rs.getDouble("BaseSalary"));
-		obj.setBirthDate(rs.getDate("BirthDate"));
+		obj.setBirthDate(new Date(rs.getTimestamp("BirthDate").getTime()));
 		obj.setDepartment(dep);
 		return obj;
 	}
