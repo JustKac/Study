@@ -69,7 +69,7 @@ public class DepartmentFormController implements Initializable {
 			notifyDataChangeListeners();
 			Utils.currentStage(event).close();
 		} catch (DbException e) {
-			Alerts.showAlert("Error saving Onject", null, e.getMessage(), AlertType.ERROR);
+			Alerts.showAlert("Error saving Object", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			setErrorMessages(e.getErrors());
 		}
