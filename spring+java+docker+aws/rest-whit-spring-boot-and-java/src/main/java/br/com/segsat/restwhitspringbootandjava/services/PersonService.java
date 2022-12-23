@@ -1,13 +1,16 @@
 package br.com.segsat.restwhitspringbootandjava.services;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.segsat.restwhitspringbootandjava.exceptions.ResourceNotFoundException;
 import br.com.segsat.restwhitspringbootandjava.model.Person;
+import br.com.segsat.restwhitspringbootandjava.repositories.PersonRepository;
 
 @Service
 public class PersonService {
@@ -15,45 +18,43 @@ public class PersonService {
     private final AtomicLong counter = new AtomicLong();
     private Logger logger = Logger.getLogger(PersonService.class.getName());
 
+    @Autowired
+    private PersonRepository personRepository;
+
     public List<Person> findAll() {
-
-        List<Person> list = new ArrayList<>();
-        logger.info("Finding all persons!");
-        for (int i = 0; i < 10; i++) {
-
-            Person person = mockperson(i);
-            list.add(person);
-        }
-
-        return list;
+        return personRepository.findAll();
     }
 
-    public Person findById(String id) {
+    public Person findById(Long id) {
 
-        logger.info("Finding one person!");
-        Person person = new Person();
-        person.setId(counter.incrementAndGet());
-        person.setFirstName("Caio");
-        person.setLastName("Lins");
-        person.setAdress("Paulista - Pernambuco, Brasil");
-        person.setGender("Male");
+        Optional<Person> person = personRepository.findById(id);
 
-        return person;
+        return person.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
     }
 
     public Person create(Person person) {
 
         logger.info("Creating one person!");
-        person.setId(counter.incrementAndGet());
-
-        return person;
+        return personRepository.save(person);
     }
 
-    public Person update(Person person) {
+    public Person update(Long id, Person newPerson) {
 
         logger.info("Updating one person!");
+        Person oldPerson = findById(id);
 
-        return person;
+        oldPerson.setFirstName(newPerson.getfirstName());
+        oldPerson.setLastName(newPerson.getLastName());
+        oldPerson.setAdress(newPerson.getAdress());
+        oldPerson.setGender(newPerson.getGender());
+
+        return personRepository.save(oldPerson);
+    }
+
+    public void delete(Long id) {
+
+        logger.info("Deleting one person!");
+        personRepository.delete(findById(id));
     }
 
     private Person mockperson(int i) {
@@ -65,12 +66,6 @@ public class PersonService {
         person.setAdress("Paulista - Pernambuco, Brasil " + i);
         person.setGender("Male");
         return person;
-    }
-
-    public void delete(String id) {
-
-        logger.info("Deleting one person!");
-
     }
 
 }

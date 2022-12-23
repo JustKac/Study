@@ -32,7 +32,7 @@ public class PersonController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person findById(@PathVariable(value = "id") String id) throws Exception {
 
-        return personService.findById(id);
+        return personService.findById(Long.parseLong(id));
     }
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -41,15 +41,15 @@ public class PersonController {
         return personService.create(person);
     }
 
-    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Person updatePerson(@RequestBody Person person) throws Exception {
+    @PutMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Person updatePerson(@PathVariable(value = "id") String id, @RequestBody Person person) throws Exception {
 
-        return personService.update(person);
+        return personService.update(Long.parseLong(id), person);
     }
 
     @DeleteMapping(value = "/delete/{id}")
     public void DeletePerson(@PathVariable(value = "id") String id) throws Exception {
-
+        personService.delete(Long.parseLong(id));
     }
 
 }
