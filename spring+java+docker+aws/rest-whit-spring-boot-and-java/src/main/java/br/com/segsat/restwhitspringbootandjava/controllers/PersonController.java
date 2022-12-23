@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,8 +49,9 @@ public class PersonController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public void DeletePerson(@PathVariable(value = "id") String id) throws Exception {
+    public ResponseEntity<?> DeletePerson(@PathVariable(value = "id") String id) throws Exception {
         personService.delete(Long.parseLong(id));
+        return ResponseEntity.noContent().build();
     }
 
 }
