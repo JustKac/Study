@@ -1,37 +1,18 @@
-package br.com.segsat.restwhitspringbootandjava.model;
+package br.com.segsat.restwhitspringbootandjava.data.vo.v1;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "person")
-public class Person implements Serializable {
+public class PersonVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "first_name", nullable = false, length = 80)
     private String firstName;
-
-    @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
-
-    @Column(name = "adress", nullable = false, length = 100)
-    private String adress;
-
-    @Column(name = "gender", length = 10)
+    private String address;
     private String gender;
 
-    public Person() {
+    public PersonVO() {
 
     }
 
@@ -60,11 +41,11 @@ public class Person implements Serializable {
     }
 
     public String getAddress() {
-        return adress;
+        return address;
     }
 
     public void setAddress(String adress) {
-        this.adress = adress;
+        this.address = adress;
     }
 
     public String getGender() {
@@ -82,7 +63,7 @@ public class Person implements Serializable {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-        result = prime * result + ((adress == null) ? 0 : adress.hashCode());
+        result = prime * result + ((address == null) ? 0 : address.hashCode());
         result = prime * result + ((gender == null) ? 0 : gender.hashCode());
         return result;
     }
@@ -95,7 +76,7 @@ public class Person implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Person other = (Person) obj;
+        PersonVO other = (PersonVO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -111,10 +92,10 @@ public class Person implements Serializable {
                 return false;
         } else if (!lastName.equals(other.lastName))
             return false;
-        if (adress == null) {
-            if (other.adress != null)
+        if (address == null) {
+            if (other.address != null)
                 return false;
-        } else if (!adress.equals(other.adress))
+        } else if (!address.equals(other.address))
             return false;
         if (gender == null) {
             if (other.gender != null)
