@@ -26,22 +26,22 @@ public class PersonController {
 
     @GetMapping(value = "/getAll", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    public List<PersonVO> findAll() throws Exception {
+    public List<PersonVO> findAll() {
 
         return personService.findAll();
     }
 
     @GetMapping(value = "/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    public PersonVO findById(@PathVariable(value = "id") String id) throws Exception {
+    public PersonVO findById(@PathVariable(value = "id") Long id) {
 
-        return personService.findById(Long.parseLong(id));
+        return personService.findById(id);
     }
 
     @PostMapping(value = "/add",
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    public PersonVO addPerson(@RequestBody PersonVO person) throws Exception {
+    public PersonVO addPerson(@RequestBody PersonVO person) {
 
         return personService.create(person);
     }
@@ -49,14 +49,14 @@ public class PersonController {
     @PutMapping(value = "/update/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    public PersonVO updatePerson(@PathVariable(value = "id") String id, @RequestBody PersonVO person) throws Exception {
+    public PersonVO updatePerson(@PathVariable(value = "id") Long id, @RequestBody PersonVO person) {
 
-        return personService.update(Long.parseLong(id), person);
+        return personService.update(id, person);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> DeletePerson(@PathVariable(value = "id") String id) throws Exception {
-        personService.delete(Long.parseLong(id));
+    public ResponseEntity<?> DeletePerson(@PathVariable(value = "id") Long id) {
+        personService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
