@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.segsat.restwhitspringbootandjava.controllers.PersonController;
 import br.com.segsat.restwhitspringbootandjava.data.vo.v1.PersonVO;
+import br.com.segsat.restwhitspringbootandjava.exceptions.RequiredObjectIsNullException;
 import br.com.segsat.restwhitspringbootandjava.exceptions.ResourceNotFoundException;
 import br.com.segsat.restwhitspringbootandjava.mapper.DozerMapper;
 import br.com.segsat.restwhitspringbootandjava.model.Person;
@@ -43,6 +44,9 @@ public class PersonService {
 
     public PersonVO create(PersonVO person) {
 
+        if (person == null){
+            throw new RequiredObjectIsNullException();
+        }
         logger.info("Creating one person!");
         var entity = personRepository.save(DozerMapper.parseObject(person, Person.class));
         var vo = DozerMapper.parseObject(entity, PersonVO.class);
@@ -52,6 +56,9 @@ public class PersonService {
 
     public PersonVO update(Long id, PersonVO newPerson) {
 
+        if (newPerson == null){
+            throw new RequiredObjectIsNullException();
+        }
         logger.info("Updating one person!");
         PersonVO oldPerson = findById(id);
 
