@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.segsat.restwhitspringbootandjava.data.vo.v1.PersonVO;
+import br.com.segsat.restwhitspringbootandjava.data.vo.v1.BookVO;
 import br.com.segsat.restwhitspringbootandjava.exceptions.ExceptionResponse;
-import br.com.segsat.restwhitspringbootandjava.services.PersonService;
+import br.com.segsat.restwhitspringbootandjava.services.BookService;
 import br.com.segsat.restwhitspringbootandjava.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -25,21 +25,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping(value = "api/person/v1")
-@Tag(name = "People", description = "Endpoints for Managing People")
-public class PersonController {
+@RequestMapping(value = "api/book/v1")
+@Tag(name = "Book", description = "Endpoints for Managing Book")
+public class BookController {
 
     @Autowired
-    private PersonService personService;
+    private BookService bookService;
 
     @GetMapping(value = "/getAll", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Finds all People", description = "Finds all People", 
-        tags = {"People"}, responses = {
+    @Operation(summary = "Finds all Book", description = "Finds all Book", 
+        tags = {"Book"}, responses = {
                 @ApiResponse(description = "Success", responseCode = "200", 
                     content = {
                         @Content(mediaType = MediaType.APPLICATION_JSON,
-                        array = @ArraySchema(schema = @Schema(implementation = PersonVO.class)))
+                        array = @ArraySchema(schema = @Schema(implementation = BookVO.class)))
                     }),
                 @ApiResponse(description = "Bad Request", responseCode = "400", 
                     content = {
@@ -62,19 +62,19 @@ public class PersonController {
                         schema = @Schema(implementation = ExceptionResponse.class))
                     })
             })
-    public List<PersonVO> findAll() {
+    public List<BookVO> findAll() {
 
-        return personService.findAll();
+        return bookService.findAll();
     }
 
     @GetMapping(value = "/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Finds a People", description = "Finds a People", 
-    tags = {"People"}, responses = {
+    @Operation(summary = "Finds a Book", description = "Finds a Book", 
+    tags = {"Book"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", 
                 content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = PersonVO.class))
+                    schema = @Schema(implementation = BookVO.class))
                 }),
             @ApiResponse(description = "Bad Request", responseCode = "400", 
                 content = {
@@ -97,20 +97,20 @@ public class PersonController {
                     schema = @Schema(implementation = ExceptionResponse.class))
                 })
         })
-    public PersonVO findById(@PathVariable(value = "id") Long id) {
+    public BookVO findById(@PathVariable(value = "id") Long id) {
 
-        return personService.findById(id);
+        return bookService.findById(id);
     }
 
     @PostMapping(value = "/add",
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Persist a People", description = "Persist a People", 
-    tags = {"People"}, responses = {
+    @Operation(summary = "Persist a Book", description = "Persist a Book", 
+    tags = {"Book"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", 
                 content = {
                     @Content(mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = PersonVO.class))
+                    schema = @Schema(implementation = BookVO.class))
                 }),
             @ApiResponse(description = "Bad Request", responseCode = "400", 
                 content = {
@@ -128,20 +128,20 @@ public class PersonController {
                     schema = @Schema(implementation = ExceptionResponse.class))
                 })
         })
-    public PersonVO addPerson(@RequestBody PersonVO person) {
+    public BookVO addPerson(@RequestBody BookVO person) {
 
-        return personService.create(person);
+        return bookService.create(person);
     }
 
     @PutMapping(value = "/update/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Updates a People", description = "Updates a People", 
-    tags = {"People"}, responses = {
+    @Operation(summary = "Updates a Book", description = "Updates a Book", 
+    tags = {"Book"}, responses = {
         @ApiResponse(description = "Success", responseCode = "200", 
             content = {
                 @Content(mediaType = MediaType.APPLICATION_JSON,
-                schema = @Schema(implementation = PersonVO.class))
+                schema = @Schema(implementation = BookVO.class))
             }),
         @ApiResponse(description = "Bad Request", responseCode = "400", 
             content = {
@@ -164,14 +164,14 @@ public class PersonController {
                 schema = @Schema(implementation = ExceptionResponse.class))
             })
     })
-    public PersonVO updatePerson(@PathVariable(value = "id") Long id, @RequestBody PersonVO person) {
+    public BookVO updatePerson(@PathVariable(value = "id") Long id, @RequestBody BookVO person) {
 
-        return personService.update(id, person);
+        return bookService.update(id, person);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    @Operation(summary = "Finds a People", description = "Finds a People", 
-    tags = {"People"}, responses = {
+    @Operation(summary = "Finds a Book", description = "Finds a Book", 
+    tags = {"Book"}, responses = {
         @ApiResponse(description = "No Content", responseCode = "204",  content = @Content()),
         @ApiResponse(description = "Bad Request", responseCode = "400", 
             content = {
@@ -190,7 +190,7 @@ public class PersonController {
             })
     })
     public ResponseEntity<?> DeletePerson(@PathVariable(value = "id") Long id) {
-        personService.delete(id);
+        bookService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
