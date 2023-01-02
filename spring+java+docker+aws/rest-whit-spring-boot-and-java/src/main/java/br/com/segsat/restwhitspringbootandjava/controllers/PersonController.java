@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,6 +98,7 @@ public class PersonController {
                     schema = @Schema(implementation = ExceptionResponse.class))
                 })
         })
+    @CrossOrigin(origins = {"http://localhost:8080"})
     public PersonVO findById(@PathVariable(value = "id") Long id) {
 
         return personService.findById(id);
@@ -128,6 +130,7 @@ public class PersonController {
                     schema = @Schema(implementation = ExceptionResponse.class))
                 })
         })
+    @CrossOrigin(origins = {"http://localhost:8080", "https://frota.setsat.com"})
     public PersonVO addPerson(@RequestBody PersonVO person) {
 
         return personService.create(person);
