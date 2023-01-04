@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import br.com.segsat.restwhitspringbootandjava.repositories.UserRepository;
 
 @Service
-public class UserServices implements UserDetailsService {
+public class UserService implements UserDetailsService {
 	
-	private Logger logger = Logger.getLogger(UserServices.class.getName());
+	private Logger logger = Logger.getLogger(UserService.class.getName());
 	
 	@Autowired
 	UserRepository repository;
 	
-	public UserServices(UserRepository repository) {
+	public UserService(UserRepository repository) {
 		this.repository = repository;
 	}
 
