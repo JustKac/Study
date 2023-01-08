@@ -1,9 +1,5 @@
 package br.com.segsat.restwhitspringbootandjava.services;
 
-import java.util.logging.Logger;
-
-import javax.print.DocFlavor.STRING;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +15,6 @@ import br.com.segsat.restwhitspringbootandjava.security.jwt.JwtTokenProvider;
 
 @Service
 public class AuthService {
-
-    private Logger logger = Logger.getLogger(AuthService.class.getName());
 
     @Autowired
     private JwtTokenProvider tokenProvider;
@@ -38,7 +32,7 @@ public class AuthService {
             var password = data.getPassowrd();
 
             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
+                    new UsernamePasswordAuthenticationToken(username, password));
 
             var user = repository.findByUsername(username);
 
@@ -52,6 +46,21 @@ public class AuthService {
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username/password supplied!");
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public ResponseEntity refreshToken(String username, String refreshToken) {
+
+        var user = repository.findByUsername(username);
+
+        var tokenResponse = new TokenVO();
+        if (user != null) {
+            tokenResponse = tokenProvider.refreshToken(refreshToken);
+        } else {
+            throw new UsernameNotFoundException(String.format("Username %s not found!", username));
+        }
+        return ResponseEntity.ok(tokenResponse);
+
     }
 
 }
