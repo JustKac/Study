@@ -33,7 +33,7 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
-    @GetMapping(value = "/getAll", 
+    @GetMapping( 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Finds all People", description = "Finds all People", 
         tags = {"People"}, responses = {
@@ -104,7 +104,7 @@ public class PersonController {
         return personService.findById(id);
     }
 
-    @PostMapping(value = "/add",
+    @PostMapping(
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Persist a People", description = "Persist a People", 
@@ -136,7 +136,7 @@ public class PersonController {
         return personService.create(person);
     }
 
-    @PutMapping(value = "/update/{id}", 
+    @PutMapping(value = "/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Updates a People", description = "Updates a People", 
@@ -172,7 +172,7 @@ public class PersonController {
         return personService.update(id, person);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     @Operation(summary = "Finds a People", description = "Finds a People", 
     tags = {"People"}, responses = {
         @ApiResponse(description = "No Content", responseCode = "204",  content = @Content()),
