@@ -3,6 +3,9 @@ package br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1;
 import java.io.Serializable;
 import java.util.Date;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class TokenVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
