@@ -29,7 +29,7 @@ public class AuthService {
     public ResponseEntity signin(AccountCredentialsVO data) {
         try {
             var username = data.getUsername();
-            var password = data.getPassowrd();
+            var password = data.getPassword();
 
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));

@@ -70,7 +70,7 @@ public class AuthControllerYamlTest extends AbstractIntegrationTest {
 					.body()
 						.as(TokenVO.class, objectMapper);
 
-		assertNotNull(tokenVO.getAcessToken());
+		assertNotNull(tokenVO.getAccessToken());
 		assertNotNull(tokenVO.getRefreshToken());
 
 	}
@@ -100,7 +100,7 @@ public class AuthControllerYamlTest extends AbstractIntegrationTest {
 				.body()
 				.as(TokenVO.class, objectMapper);
 
-		assertNotNull(newTokenVO.getAcessToken());
+		assertNotNull(newTokenVO.getAccessToken());
 		assertNotNull(newTokenVO.getRefreshToken());
 
 	}

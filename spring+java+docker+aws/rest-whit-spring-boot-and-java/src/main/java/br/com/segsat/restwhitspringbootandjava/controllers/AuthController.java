@@ -29,7 +29,7 @@ public class AuthController {
     @PostMapping(value = "/signin")
     public ResponseEntity signin(@RequestBody AccountCredentialsVO data) {
         if (data == null || data.getUsername() == null || data.getUsername().isBlank()
-                || data.getPassowrd() == null || data.getPassowrd().isBlank()) {
+                || data.getPassword() == null || data.getPassword().isBlank()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         }
         var token = authService.signin(data);
