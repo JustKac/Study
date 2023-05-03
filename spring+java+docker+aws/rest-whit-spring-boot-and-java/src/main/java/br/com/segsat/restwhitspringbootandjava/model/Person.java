@@ -31,6 +31,9 @@ public class Person implements Serializable {
     @Column(name = "gender", length = 10)
     private String gender;
 
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled;
+
     public Person() {
 
     }
@@ -75,15 +78,23 @@ public class Person implements Serializable {
         this.gender = gender;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         result = prime * result + ((address == null) ? 0 : address.hashCode());
         result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+        result = prime * result + (enabled ? 1231 : 1237);
         return result;
     }
 
@@ -96,11 +107,6 @@ public class Person implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         Person other = (Person) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
         if (firstName == null) {
             if (other.firstName != null)
                 return false;
@@ -120,6 +126,8 @@ public class Person implements Serializable {
             if (other.gender != null)
                 return false;
         } else if (!gender.equals(other.gender))
+            return false;
+        if (enabled != other.enabled)
             return false;
         return true;
     }
