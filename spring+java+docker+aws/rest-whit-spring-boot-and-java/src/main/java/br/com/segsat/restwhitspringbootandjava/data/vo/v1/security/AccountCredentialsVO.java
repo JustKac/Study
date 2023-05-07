@@ -2,7 +2,7 @@ package br.com.segsat.restwhitspringbootandjava.data.vo.v1.security;
 
 import java.io.Serializable;
 
-public class AccountCredentialsVO implements Serializable {
+public class    AccountCredentialsVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

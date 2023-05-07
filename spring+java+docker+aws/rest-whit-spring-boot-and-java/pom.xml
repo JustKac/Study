@@ -55,7 +55,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-		 </dependency>
+		</dependency>
 
 		<!-- Open API - SpringDoc -->
 
@@ -106,6 +106,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.glassfish.web</groupId>
+			<artifactId>el-impl</artifactId>
+			<version>2.2</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.14.1</version>
@@ -149,9 +156,9 @@
 			<artifactId>rest-assured</artifactId>
 			<version>${rest-assured.version}</version>
 			<scope>test</scope>
-	  </dependency>
+		</dependency>
 
-	  <!-- devtools -->
+		<!-- devtools -->
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

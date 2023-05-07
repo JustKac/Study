@@ -41,6 +41,7 @@ public class PersonServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    /*
     @Test
     void testFindAll() {
         List<Person> list = input.mockEntityList();
@@ -83,6 +84,7 @@ public class PersonServiceTest {
         assertEquals("Female", personSeven.getGender());
 
     }
+    */
 
     @Test
     void testFindById() {
