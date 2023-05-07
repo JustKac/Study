@@ -2,16 +2,19 @@ package br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1;
 
 import java.io.Serializable;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class AccountCredentialsVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String username;
-    private String passowrd;
+    private String password;
 
     public AccountCredentialsVO(String username, String passowrd) {
         this.username = username;
-        this.passowrd = passowrd;
+        this.password = passowrd;
     }
 
     public AccountCredentialsVO() {
@@ -25,12 +28,12 @@ public class AccountCredentialsVO implements Serializable {
         this.username = username;
     }
 
-    public String getPassowrd() {
-        return passowrd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassowrd(String passowrd) {
-        this.passowrd = passowrd;
+    public void setPassword(String passowrd) {
+        this.password = passowrd;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class AccountCredentialsVO implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((username == null) ? 0 : username.hashCode());
-        result = prime * result + ((passowrd == null) ? 0 : passowrd.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
         return result;
     }
 
@@ -56,10 +59,10 @@ public class AccountCredentialsVO implements Serializable {
                 return false;
         } else if (!username.equals(other.username))
             return false;
-        if (passowrd == null) {
-            if (other.passowrd != null)
+        if (password == null) {
+            if (other.password != null)
                 return false;
-        } else if (!passowrd.equals(other.passowrd))
+        } else if (!password.equals(other.password))
             return false;
         return true;
     }

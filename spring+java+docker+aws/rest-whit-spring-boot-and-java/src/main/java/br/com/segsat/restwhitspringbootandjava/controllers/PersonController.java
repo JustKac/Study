@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,7 +36,7 @@ public class PersonController {
 
     @GetMapping( 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Finds all People", description = "Finds all People", 
+    @Operation(summary = "Find all Person", description = "Finds all Person", 
         tags = {"People"}, responses = {
                 @ApiResponse(description = "Success", responseCode = "200", 
                     content = {
@@ -70,7 +71,7 @@ public class PersonController {
 
     @GetMapping(value = "/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Finds a People", description = "Finds a People", 
+    @Operation(summary = "Find Person by ID", description = "Finds a Person by ID", 
     tags = {"People"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", 
                 content = {
@@ -98,7 +99,7 @@ public class PersonController {
                     schema = @Schema(implementation = ExceptionResponse.class))
                 })
         })
-    @CrossOrigin(origins = {"http://localhost:8080"})
+    
     public PersonVO findById(@PathVariable(value = "id") Long id) {
 
         return personService.findById(id);
@@ -107,7 +108,7 @@ public class PersonController {
     @PostMapping(
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Persist a People", description = "Persist a People", 
+    @Operation(summary = "Persist Person", description = "Persist a Person", 
     tags = {"People"}, responses = {
             @ApiResponse(description = "Success", responseCode = "200", 
                 content = {
@@ -139,7 +140,7 @@ public class PersonController {
     @PutMapping(value = "/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
-    @Operation(summary = "Updates a People", description = "Updates a People", 
+    @Operation(summary = "Update Person by ID", description = "Updates a Person by ID", 
     tags = {"People"}, responses = {
         @ApiResponse(description = "Success", responseCode = "200", 
             content = {
@@ -172,8 +173,43 @@ public class PersonController {
         return personService.update(id, person);
     }
 
+    @PatchMapping(value = "/{id}", 
+        produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @Operation(summary = "Disable Person by ID", description = "Disable a Person by ID", 
+    tags = {"People"}, responses = {
+            @ApiResponse(description = "Success", responseCode = "200", 
+                content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = PersonVO.class))
+                }),
+            @ApiResponse(description = "Bad Request", responseCode = "400", 
+                content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ExceptionResponse.class))
+                }),
+            @ApiResponse(description = "Unautorized", responseCode = "401", 
+                content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ExceptionResponse.class))
+                }),
+            @ApiResponse(description = "Not Found", responseCode = "404", 
+                content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ExceptionResponse.class))
+                }),
+            @ApiResponse(description = "Internal Server Errror", responseCode = "500", 
+                content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ExceptionResponse.class))
+                })
+        })
+    
+    public PersonVO disablePersonById(@PathVariable(value = "id") Long id) {
+        return personService.disablePersonById(id);
+    }
+
     @DeleteMapping(value = "/{id}")
-    @Operation(summary = "Finds a People", description = "Finds a People", 
+    @Operation(summary = "Delete Person by ID", description = "Delete a Person by ID", 
     tags = {"People"}, responses = {
         @ApiResponse(description = "No Content", responseCode = "204",  content = @Content()),
         @ApiResponse(description = "Bad Request", responseCode = "400", 

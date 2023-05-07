@@ -3,6 +3,9 @@ package br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1;
 import java.io.Serializable;
 import java.util.Date;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class TokenVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -11,7 +14,7 @@ public class TokenVO implements Serializable {
     private Boolean authenticated;
     private Date created;
     private Date expiration;
-    private String acessToken;
+    private String accessToken;
     private String refreshToken;
 
     public TokenVO(String username, Boolean authenticated, Date created, Date expiration, String acessToken,
@@ -20,7 +23,7 @@ public class TokenVO implements Serializable {
         this.authenticated = authenticated;
         this.created = created;
         this.expiration = expiration;
-        this.acessToken = acessToken;
+        this.accessToken = acessToken;
         this.refreshToken = refreshToken;
     }
 
@@ -60,12 +63,12 @@ public class TokenVO implements Serializable {
         this.expiration = expiration;
     }
 
-    public String getAcessToken() {
-        return acessToken;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setAcessToken(String acessToken) {
-        this.acessToken = acessToken;
+    public void setAccessToken(String acessToken) {
+        this.accessToken = acessToken;
     }
 
     public String getRefreshToken() {
@@ -84,7 +87,7 @@ public class TokenVO implements Serializable {
         result = prime * result + ((authenticated == null) ? 0 : authenticated.hashCode());
         result = prime * result + ((created == null) ? 0 : created.hashCode());
         result = prime * result + ((expiration == null) ? 0 : expiration.hashCode());
-        result = prime * result + ((acessToken == null) ? 0 : acessToken.hashCode());
+        result = prime * result + ((accessToken == null) ? 0 : accessToken.hashCode());
         result = prime * result + ((refreshToken == null) ? 0 : refreshToken.hashCode());
         return result;
     }
@@ -118,10 +121,10 @@ public class TokenVO implements Serializable {
                 return false;
         } else if (!expiration.equals(other.expiration))
             return false;
-        if (acessToken == null) {
-            if (other.acessToken != null)
+        if (accessToken == null) {
+            if (other.accessToken != null)
                 return false;
-        } else if (!acessToken.equals(other.acessToken))
+        } else if (!accessToken.equals(other.accessToken))
             return false;
         if (refreshToken == null) {
             if (other.refreshToken != null)

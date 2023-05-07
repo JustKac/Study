@@ -32,7 +32,7 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping(value = "/getAll", 
+    @GetMapping( 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Finds all Book", description = "Finds all Book", 
         tags = {"Book"}, responses = {
@@ -102,7 +102,7 @@ public class BookController {
         return bookService.findById(id);
     }
 
-    @PostMapping(value = "/add",
+    @PostMapping(
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Persist a Book", description = "Persist a Book", 
@@ -133,7 +133,7 @@ public class BookController {
         return bookService.create(person);
     }
 
-    @PutMapping(value = "/update/{id}", 
+    @PutMapping(value = "/{id}", 
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML }, 
         consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Updates a Book", description = "Updates a Book", 
@@ -169,7 +169,7 @@ public class BookController {
         return bookService.update(id, person);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     @Operation(summary = "Finds a Book", description = "Finds a Book", 
     tags = {"Book"}, responses = {
         @ApiResponse(description = "No Content", responseCode = "204",  content = @Content()),

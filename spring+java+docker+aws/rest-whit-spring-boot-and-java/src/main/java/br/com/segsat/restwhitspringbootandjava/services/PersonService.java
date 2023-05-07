@@ -15,6 +15,7 @@ import br.com.segsat.restwhitspringbootandjava.exceptions.ResourceNotFoundExcept
 import br.com.segsat.restwhitspringbootandjava.mapper.DozerMapper;
 import br.com.segsat.restwhitspringbootandjava.model.Person;
 import br.com.segsat.restwhitspringbootandjava.repositories.PersonRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PersonService {
@@ -70,6 +71,21 @@ public class PersonService {
         var entity = personRepository.save(DozerMapper.parseObject(oldPerson, Person.class));
         var vo = DozerMapper.parseObject(entity, PersonVO.class);
         vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
+        return vo;
+    }
+
+    @Transactional
+    public PersonVO disablePersonById(Long id) {
+
+        logger.info("Disabling one person!");
+
+        personRepository.disablePersonById(id);
+
+        var entity = personRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
+        PersonVO vo = DozerMapper.parseObject(entity, PersonVO.class);
+        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
         return vo;
     }
 
