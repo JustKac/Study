@@ -1,11 +1,17 @@
 package br.com.segsat.restwhitspringbootandjava.services;
 
-import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import br.com.segsat.restwhitspringbootandjava.controllers.BookController;
@@ -24,12 +30,23 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public List<BookVO> findAll() {
+    @Autowired
+    private PagedResourcesAssembler<BookVO> assembler;
 
-        var persons = DozerMapper.parseListObjects(bookRepository.findAll(), BookVO.class);
-        persons.stream().forEach(p -> p.add(linkTo(methodOn(BookController.class).findById(p.getKey())).withSelfRel()));
+    public PagedModel<EntityModel<BookVO>> findAll(Pageable pageable) {
 
-        return persons;
+        var bookPage = bookRepository.findAll(pageable);
+
+        Page<BookVO> bookVosPage = bookPage.map(b -> DozerMapper.parseObject(b, BookVO.class))
+                                        .map(b -> b.add(linkTo(methodOn(BookController.class)
+                                        .findById(b.getKey())).withSelfRel()));
+
+        Link link = linkTo(methodOn(BookController.class).findAll(
+            pageable.getPageNumber(), 
+            pageable.getPageSize(), 
+            "asc")).withSelfRel();
+
+        return assembler.toModel(bookVosPage, link);
     }
 
     public BookVO findById(Long id) {
