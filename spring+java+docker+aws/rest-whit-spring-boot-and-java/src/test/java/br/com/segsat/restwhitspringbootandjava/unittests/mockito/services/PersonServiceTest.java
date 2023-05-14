@@ -3,7 +3,6 @@ package br.com.segsat.restwhitspringbootandjava.unittests.mockito.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;

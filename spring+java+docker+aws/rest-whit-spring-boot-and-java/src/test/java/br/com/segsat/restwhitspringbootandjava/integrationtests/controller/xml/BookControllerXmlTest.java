@@ -24,6 +24,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import br.com.segsat.restwhitspringbootandjava.configs.TestConfig;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.testcontainers.AbstractIntegrationTest;
+import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.pagedModels.PagedModelBook;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.AccountCredentialsVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.BookVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.TokenVO;
@@ -191,17 +192,18 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 		var content = given().spec(specification)
 				.contentType(TestConfig.CONTENT_TYPE_XML)
 				.accept(TestConfig.CONTENT_TYPE_XML)
-					.when()
-					.get()
+				.queryParams("page", 0, "size", 10, "direction", "asc")
+				.when()
+					.get("/getAll")
 				.then()
 					.statusCode(200)
 						.extract()
 						.body()
 							.asString();
 		
-		List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
-		
-		BookVO foundBookOne = books.get(0);
+		// List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
+		PagedModelBook wrapper = objectMapper.readValue(content, PagedModelBook.class);
+        BookVO foundBookOne = wrapper.getContent().get(0);
         
         assertNotNull(foundBookOne.getId());
         assertNotNull(foundBookOne.getTitle());
@@ -212,7 +214,7 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
         assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
         assertEquals(49.00, foundBookOne.getPrice());
         
-        BookVO foundBookFive = books.get(4);
+        BookVO foundBookFive = wrapper.getContent().get(4);
         
         assertNotNull(foundBookFive.getId());
         assertNotNull(foundBookFive.getTitle());

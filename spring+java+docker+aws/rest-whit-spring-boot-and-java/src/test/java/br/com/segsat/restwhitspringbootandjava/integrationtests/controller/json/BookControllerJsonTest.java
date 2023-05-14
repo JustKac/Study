@@ -26,6 +26,7 @@ import br.com.segsat.restwhitspringbootandjava.integrationtests.testcontainers.A
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.AccountCredentialsVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.BookVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.TokenVO;
+import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.wrappers.WrapperBookVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -185,18 +186,19 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 
         var content = given().spec(specification)
                 .contentType(TestConfig.CONTENT_TYPE_JSON)
-                    .queryParams("page", 0 , "limit", 5, "direction", "asc")
-                    .when()
-                    .get()
+                .queryParams("page", 0, "size", 10, "direction", "asc")
+				.when()
+					.get("/getAll")
                 .then()
                     .statusCode(200)
                 .extract()
                     .body()
                 .asString();
         
-        List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
-		
-        BookVO foundBookOne = books.get(0);
+        // List<BookVO> books = objectMapper.readValue(content, new TypeReference<List<BookVO>>() {});
+
+        WrapperBookVO wrapper = objectMapper.readValue(content, WrapperBookVO.class);
+        BookVO foundBookOne = wrapper.getEmbedded().getBooks().get(0);
         
         assertNotNull(foundBookOne.getId());
         assertNotNull(foundBookOne.getTitle());
@@ -207,7 +209,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals("Michael C. Feathers", foundBookOne.getAuthor());
         assertEquals(49.00, foundBookOne.getPrice());
         
-        BookVO foundBookFive = books.get(4);
+        BookVO foundBookFive = wrapper.getEmbedded().getBooks().get(4);
         
         assertNotNull(foundBookFive.getId());
         assertNotNull(foundBookFive.getTitle());

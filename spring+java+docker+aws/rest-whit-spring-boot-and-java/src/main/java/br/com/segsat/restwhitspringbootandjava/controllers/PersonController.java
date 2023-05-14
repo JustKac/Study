@@ -39,7 +39,7 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
-    @GetMapping( value = "getAll",
+    @GetMapping(value = "/getAll",
         produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
     @Operation(summary = "Find all Person", description = "Finds all Person", 
         tags = {"People"}, responses = {
@@ -79,6 +79,49 @@ public class PersonController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "id"));
         return ResponseEntity.ok(personService.findAll(pageable));
+    }
+
+    @GetMapping(value = "/findPersonByName/{firstName}",
+        produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @Operation(summary = "Find all Person by Name", description = "Finds all Person by Name", 
+        tags = {"People"}, responses = {
+                @ApiResponse(description = "Success", responseCode = "200", 
+                    content = {
+                        @Content(mediaType = MediaType.APPLICATION_JSON,
+                        array = @ArraySchema(schema = @Schema(implementation = PersonVO.class)))
+                    }),
+                @ApiResponse(description = "Bad Request", responseCode = "400", 
+                    content = {
+                        @Content(mediaType = MediaType.APPLICATION_JSON,
+                        schema = @Schema(implementation = ExceptionResponse.class))
+                    }),
+                @ApiResponse(description = "Unautorized", responseCode = "401", 
+                    content = {
+                        @Content(mediaType = MediaType.APPLICATION_JSON,
+                        schema = @Schema(implementation = ExceptionResponse.class))
+                    }),
+                @ApiResponse(description = "Not Found", responseCode = "404", 
+                    content = {
+                        @Content(mediaType = MediaType.APPLICATION_JSON,
+                        schema = @Schema(implementation = ExceptionResponse.class))
+                    }),
+                @ApiResponse(description = "Internal Server Errror", responseCode = "500", 
+                    content = {
+                        @Content(mediaType = MediaType.APPLICATION_JSON,
+                        schema = @Schema(implementation = ExceptionResponse.class))
+                    })
+            })
+    public ResponseEntity<PagedModel<EntityModel<PersonVO>>> findPersonByName(
+        @PathVariable(value = "firstName") String firstName,
+        @RequestParam(value = "page", defaultValue = "0") Integer page,
+        @RequestParam(value = "size", defaultValue = "12") Integer size,
+        @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "id"));
+        return ResponseEntity.ok(personService.findPersonByName(firstName, pageable));
     }
 
     @GetMapping(value = "/{id}", 
