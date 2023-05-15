@@ -1,13 +1,11 @@
 package br.com.segsat.restwhitspringbootandjava.integrationtests.controller.xml;
 
 import static io.restassured.RestAssured.given;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -247,6 +244,35 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 			.then()
 				.statusCode(403);
 	}
+
+	@Test
+    @Order(7)
+    public void testHateoas() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfig.CONTENT_TYPE_XML)
+				.accept(TestConfig.CONTENT_TYPE_XML)
+				.queryParams("page", 1, "size", 5, "direction", "asc")
+				.when()
+					.get("/getAll")
+				.then()
+					.statusCode(200)
+						.extract()
+						.body()
+							.asString();
+        
+        assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/6</href></links>"));
+        assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/10</href></links>"));
+
+        assertTrue(content.contains("<links><rel>first</rel><href>http://localhost:8888/api/book/v1/getAll?direction=asc&amp;page=0&amp;size=5&amp;sort=id,asc</href></links>"));
+        assertTrue(content.contains("<links><rel>prev</rel><href>http://localhost:8888/api/book/v1/getAll?direction=asc&amp;page=0&amp;size=5&amp;sort=id,asc</href></links>"));
+        assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/getAll?page=1&amp;size=5&amp;direction=asc</href></links>"));
+        assertTrue(content.contains("<links><rel>next</rel><href>http://localhost:8888/api/book/v1/getAll?direction=asc&amp;page=2&amp;size=5&amp;sort=id,asc</href></links>"));
+        assertTrue(content.contains("<links><rel>last</rel><href>http://localhost:8888/api/book/v1/getAll?direction=asc&amp;page=2&amp;size=5&amp;sort=id,asc</href></links>"));
+
+        assertTrue(content.contains("<page><size>5</size><totalElements>15</totalElements><totalPages>3</totalPages><number>1</number></page>"));
+
+    }
 	
     private void mockBook() {
         book.setTitle("Docker Deep Dive");

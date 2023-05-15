@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -219,6 +217,34 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertEquals("Code complete", foundBookFive.getTitle());
         assertEquals("Steve McConnell", foundBookFive.getAuthor());
         assertEquals(58.0, foundBookFive.getPrice());
+    }
+
+    @Test
+    @Order(7)
+    public void testHateoas() throws JsonMappingException, JsonProcessingException {
+
+        var content = given().spec(specification)
+                .contentType(TestConfig.CONTENT_TYPE_JSON)
+                .queryParams("page", 1, "size", 5, "direction", "asc")
+				.when()
+					.get("/getAll")
+                .then()
+                    .statusCode(200)
+                .extract()
+                    .body()
+                .asString();
+        
+        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/v1/6\"}}"));
+        assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/v1/10\"}}"));
+
+        assertTrue(content.contains("\"first\":{\"href\":\"http://localhost:8888/api/book/v1/getAll?direction=asc&page=0&size=5&sort=id,asc\"}"));
+        assertTrue(content.contains("\"prev\":{\"href\":\"http://localhost:8888/api/book/v1/getAll?direction=asc&page=0&size=5&sort=id,asc\"}"));
+        assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/book/v1/getAll?page=1&size=5&direction=asc\"}"));
+        assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/book/v1/getAll?direction=asc&page=2&size=5&sort=id,asc\"}"));
+        assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/book/v1/getAll?direction=asc&page=2&size=5&sort=id,asc\"}"));
+
+        assertTrue(content.contains("\"page\":{\"size\":5,\"totalElements\":15,\"totalPages\":3,\"number\":1}"));
+
     }
      
     private void mockBook() {

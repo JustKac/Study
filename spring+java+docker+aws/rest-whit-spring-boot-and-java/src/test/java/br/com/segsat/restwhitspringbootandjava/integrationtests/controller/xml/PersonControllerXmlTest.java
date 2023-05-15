@@ -16,14 +16,12 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import br.com.segsat.restwhitspringbootandjava.configs.TestConfig;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.testcontainers.AbstractIntegrationTest;
-import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.wrappers.WrapperPersonVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.pagedModels.PagedModelPerson;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.AccountCredentialsVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.PersonVO;
@@ -313,6 +311,73 @@ public class PersonControllerXmlTest extends AbstractIntegrationTest {
 					.statusCode(403);
 
 	}
+
+	@Test
+	@Order(8)
+	public void testFindPersonByName() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfig.CONTENT_TYPE_XML)
+				.pathParam("firstName", "be")
+				.queryParams("page", 0 , "size", 10, "direction", "asc")
+				.when()
+					.get("/findPersonByName/{firstName}")
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+
+		PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class);
+		List<PersonVO> people = wrapper.getContent();
+		
+		PersonVO person = people.get(0);
+
+		assertNotNull(person);
+		assertNotNull(person.getId());
+		assertNotNull(person.getFirstName());
+		assertNotNull(person.getLastName());
+		assertNotNull(person.getAddress());
+		assertNotNull(person.getGender());
+		assertTrue(person.isEnabled());
+
+		assertEquals(person.getId(), 68);
+		assertEquals("Corbet", person.getFirstName());
+		assertEquals("Batcheldor", person.getLastName());
+		assertEquals("609 Duke Trail", person.getAddress());
+		assertEquals("Male", person.getGender());
+	}
+
+	@Test
+	@Order(9)
+	public void testHateoas() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfig.CONTENT_TYPE_XML)
+				.queryParams("page", 1 , "size", 100, "direction", "asc")
+				.when()
+					.get("/getAll")
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/person/v1/134</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/person/v1/201</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/person/v1/180</href></links>"));
+
+		assertTrue(content.contains("<links><rel>first</rel><href>http://localhost:8888/api/person/v1/getAll?direction=asc&amp;page=0&amp;size=100&amp;sort=id,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>prev</rel><href>http://localhost:8888/api/person/v1/getAll?direction=asc&amp;page=0&amp;size=100&amp;sort=id,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/person/v1/getAll?page=1&amp;size=100&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<links><rel>next</rel><href>http://localhost:8888/api/person/v1/getAll?direction=asc&amp;page=2&amp;size=100&amp;sort=id,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>last</rel><href>http://localhost:8888/api/person/v1/getAll?direction=asc&amp;page=10&amp;size=100&amp;sort=id,asc</href></links>"));
+
+		assertTrue(content.contains("<page><size>100</size><totalElements>1006</totalElements><totalPages>11</totalPages><number>1</number></page>"));
+
+	}
+
+	
 
 	private void mockPerson() {
 		person.setFirstName("Eduardo");

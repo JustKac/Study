@@ -1,30 +1,31 @@
 package br.com.segsat.restwhitspringbootandjava.integrationtests.controller.json;
 
 import static io.restassured.RestAssured.given;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.segsat.restwhitspringbootandjava.configs.TestConfig;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.testcontainers.AbstractIntegrationTest;
-import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.wrappers.WrapperPersonVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.AccountCredentialsVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.PersonVO;
 import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.v1.TokenVO;
+import br.com.segsat.restwhitspringbootandjava.integrationtests.vo.wrappers.WrapperPersonVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -306,6 +307,72 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 					.get()
 				.then()
 					.statusCode(403);
+
+	}
+
+	@Test
+	@Order(8)
+	public void testFindPersonByName() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfig.CONTENT_TYPE_JSON)
+				.pathParam("firstName", "be")
+				.queryParams("page", 0 , "size", 10, "direction", "asc")
+				.when()
+					.get("/findPersonByName/{firstName}")
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+		
+		WrapperPersonVO wrapper = objectMapper.readValue(content, WrapperPersonVO.class);
+		List<PersonVO> people = wrapper.getEmbedded().getPersons();
+
+		PersonVO person = people.get(0);
+
+		assertNotNull(person);
+		assertNotNull(person.getId());
+		assertNotNull(person.getFirstName());
+		assertNotNull(person.getLastName());
+		assertNotNull(person.getAddress());
+		assertNotNull(person.getGender());
+		assertTrue(person.isEnabled());
+
+		assertEquals(person.getId(), 68);
+		assertEquals("Corbet", person.getFirstName());
+		assertEquals("Batcheldor", person.getLastName());
+		assertEquals("609 Duke Trail", person.getAddress());
+		assertEquals("Male", person.getGender());
+
+	}
+
+	@Test
+	@Order(9)
+	public void testHateoas() throws JsonMappingException, JsonProcessingException {
+
+		var content = given().spec(specification)
+				.contentType(TestConfig.CONTENT_TYPE_JSON)
+				.queryParams("page", 1 , "size", 100, "direction", "asc")
+				.when()
+					.get("/getAll")
+				.then()
+					.statusCode(200)
+				.extract()
+					.body()
+						.asString();
+
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/person/v1/201\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/person/v1/134\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/person/v1/180\"}}}"));
+
+		assertTrue(content.contains("\"first\":{\"href\":\"http://localhost:8888/api/person/v1/getAll?direction=asc&page=0&size=100&sort=id,asc\"}"));
+		assertTrue(content.contains("\"prev\":{\"href\":\"http://localhost:8888/api/person/v1/getAll?direction=asc&page=0&size=100&sort=id,asc\"}"));
+		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/person/v1/getAll?page=1&size=100&direction=asc\"}"));
+		assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/person/v1/getAll?direction=asc&page=2&size=100&sort=id,asc\"}"));
+		assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/person/v1/getAll?direction=asc&page=10&size=100&sort=id,asc\"}"));
+
+		assertTrue(content.contains("\"page\":{\"size\":100,\"totalElements\":1006,\"totalPages\":11,\"number\":1}}"));
 
 	}
 
