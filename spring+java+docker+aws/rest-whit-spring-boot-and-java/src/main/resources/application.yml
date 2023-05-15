@@ -16,6 +16,8 @@
 
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://frota.segsat.com
+file:
+  upload-dir: /upload-dir
 security:
   jwt:
     token:
@@ -35,6 +37,12 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: false
     open-in-view: false
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
 springdoc:
   pathsToMatch:
     - /auth/**
