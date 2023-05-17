@@ -7,7 +7,10 @@ import java.nio.file.StandardCopyOption;
 
 import br.com.segsat.restwhitspringbootandjava.config.FileStoreConfig;
 import br.com.segsat.restwhitspringbootandjava.exceptions.FileStorageException;
+import br.com.segsat.restwhitspringbootandjava.exceptions.MyFileNotFoundException;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +50,18 @@ public class FileStorageService {
                 "Could not store file " + fileName + ". Please try again.", e);
         }
 
+    }
 
+    public Resource loadFileAsResource(String fileName){
+        try {
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()){
+                return resource;
+            }
+            throw new MyFileNotFoundException("File not Found.");
+        } catch (Exception e) {
+            throw new MyFileNotFoundException("File not Found.", e);
+        }
     }
 }
