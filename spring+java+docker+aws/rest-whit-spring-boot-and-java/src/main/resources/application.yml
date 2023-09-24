@@ -20,7 +20,7 @@ cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://frota.segsat.com
 file:
   # upload-dir: /Users/caiolins/upload-dir #macbook
-  upload-dir: /upload-dir #windows
+  upload-dir: ./upload-dir #windows
 security:
   jwt:
     token:
