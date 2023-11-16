@@ -33,6 +33,7 @@ build/
 *.vscode/
 *.DS_Store
 */.project
+*.project
 
 # See https://www.dartlang.org/guides/libraries/private-files
 
