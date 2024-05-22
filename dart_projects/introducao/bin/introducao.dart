@@ -114,6 +114,22 @@ void main(List<String> arguments) {
     print('Uma energia foi consumida. Energia restante - $energia');
   } while (energia > 0);
 
+  /// - - - - - - - - - - Operando com Listas - - - - - - - - - -
+
+  String reduceFunction = listaDeNomes.reduce((value, element) {
+    return '$value $element';
+  });
+
+  print(reduceFunction);
+
+  List<String> whereFunction = listaDeNomes.where((element) => element.length > 5).toList();
+
+  print(whereFunction);
+
+  String firtsWhereFunction = listaDeNomes.firstWhere((element) => element.length > 5);
+
+  print(firtsWhereFunction);
+
   /// - - - - - - - - - - Trabalhando com Funcões - - - - - - - - - -
 
   print('2 x 2 = ${introducao.calculate(2, 2)}');
